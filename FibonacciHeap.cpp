@@ -1,4 +1,4 @@
-/**
+/*
  * PROBLEM STATEMENT
  * You are required to implement a system to find the n most popular hashtags 
  * appeared on social media such as Facebook or Twitter. For the scope of this 
@@ -15,14 +15,14 @@
  * You can assume there will be a large number of hashtags appears in the stream 
  * and you need to perform increase key operation many times. Max Fibonacci heap 
  * is required because it has better theoretical bounds for increase key operation
- **/
+ */
  
-/** Author : Vinayak Deshpande
-  * UFID   : 4102 9538
-  **/
+/* Author : Vinayak Deshpande
+ * UFID   : 4102 9538
+ */
 
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <cstdlib>
 #include <unordered_map>
 #include <cmath>
@@ -52,42 +52,44 @@ int main(int argc, char *argv[]) {
     return 0;
   }
   
-  // hashtagcounter class object to access methods
- // hashtagcounter node = new hashtagcounter();
-  
   //The Output File containing top most n hash tags
   ofstream outFile;
   outFile.open("output_file.txt");
   
   // This will read one hash tag at a time
-  string readHashTag;
+  string readHashTag, hashTag;
   int hashTagCount;
   char first;
   while(!inFile.eof()) {
 	
     getline(inFile, readHashTag);
-    first = readHashTag(0);
-    cout << first;
-    //cout << readHashTag << endl;
-	
+    first = readHashTag.at(0);       
     
-
     // To Separate hash tags entries from queries
-   /* if() {							// These are hash tags
-      
-      
+    if(first == '#' ) {							// These are hash tags
+   
+	string *split  = strtok (readHashTag, " ");
+	// hash tag counter object creation   
+	hashtagcounter node(hashTagCount, hashTag);	
+     
     }
     
-    else if () {						// Stop here
-      
-      
+    else if (first == 's' || first == 'S') {						// Stop here
+   	
+	inFile.close();
+	outFile.close();   
+   	exit(0);
+	
     }
     
-    else {							// These are removeMax queries 
+   else {							// These are removeMax queries 
+	
+	   	
+
+   
+   }  
       
-      
-      
-  }
+  } 
 
   inFile.close();
   outFile.close();

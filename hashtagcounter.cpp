@@ -15,5 +15,5 @@ hashtagcounter::hashtagcounter (int elem, string hHashTag) {
   //  *hRightSib = *hLeftSib = this;
   //  this.hHashTag = hHashTag;
   //  hELem = elem;
-  
+  cout << hHashTag << " "  << elem << endl;  
 }
