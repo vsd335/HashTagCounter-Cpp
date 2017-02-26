@@ -83,9 +83,8 @@ int main(int argc, char *argv[]) {
 				
 	}
 	else {
-		// hashTag is present in HashMap so do IncreaseKey()		
- 	        heap.IncreaseKey(hm[hashTag],hashTagCount);
-				
+		// hashTag is present in HashMap so do IncreaseKey()			
+ 	        heap.IncreaseKey(hm[hashTag],hashTagCount);				
 		
 	}     
 	
