@@ -34,13 +34,13 @@ class hashtagcounter {
 	HeapEntry* HeapInit(int elem, string hHashTag);	
 	void InsertNode(HeapEntry *newNode);		
 	void IncreaseKey(HeapEntry *node, int newVal);	
-	/**HeapEntry *RemoveMax();				
+	HeapEntry *RemoveMax();				
 	void AddChildren2Root(HeapEntry *firstChild); 	
 	void RecursiveMerge(HeapEntry *pairNode1);	
 	HeapEntry *CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2);	
         HeapEntry *InsertIntoRootList(HeapEntry *oldNode, HeapEntry *newNode);
 	void NodeCut(HeapEntry *childNode, HeapEntry *parentNode);
-	void NodeCascade(HeapEntry *parentNode);**/		
+	void NodeCascade(HeapEntry *parentNode);
     
 };
 

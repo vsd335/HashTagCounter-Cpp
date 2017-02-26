@@ -31,7 +31,7 @@
 
 using namespace std;
 
-// Hash Map for all the elements to be inserted into the heap
+// Hash table(map)  for all the nodes to be inserted into the heap
 unordered_map<string, HeapEntry*> hm;
 
 int main(int argc, char *argv[]) {
@@ -78,8 +78,10 @@ int main(int argc, char *argv[]) {
 
 	if (hm.find(hashTag) == hm.end()) {
 		// hashTag is not present in HashMap so do InsertKey()
-		hm[hashTag] = heap.HeapInit(hashTagCount, hashTag);
-		heap.InsertNode(hm[hashTag]);
+		HeapEntry *node;
+		node = heap.HeapInit(hashTagCount, hashTag);
+		hm[hashTag] = node;
+		heap.InsertNode(node);
 				
 	}
 	else {
@@ -100,10 +102,22 @@ int main(int argc, char *argv[]) {
     }
     
    else {							// These are removeMax queries 
-	
+
 	int query = stoi(readHashTag);	   	
-	
-   
+
+	// Hash Table(map) for all the removed elements to be inserted back into the heap
+	unordered_map<string, int> dict;
+		
+	HeapEntry *node;
+
+	// Remove Max and Pairwise Combine operations
+	for (int i=0; i<query; i++) {
+
+		//node = heap.RemoveMax();
+		
+
+	}
+  
    }  
       
   } 

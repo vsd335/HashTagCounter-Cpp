@@ -6,11 +6,13 @@
 #include <fstream>
 #include "hashtagcounter.h"
 
+#define sc hashtagcounter
+
 using namespace std;
 //using namespace hashtagcounter;
 
 // Set the initial left and right sibling of a new node to itself
-HeapEntry* hashtagcounter::HeapInit(int elem, string hHashTag) {
+HeapEntry* sc::HeapInit(int elem, string hHashTag) {
   
   HeapEntry *node = new HeapEntry;
   node->hRightSib = node;
@@ -23,16 +25,59 @@ HeapEntry* hashtagcounter::HeapInit(int elem, string hHashTag) {
 }
 
 /** Insert() : Insert a new node into the heap **/ 
-void hashtagcounter::InsertNode(HeapEntry *newNode) {
+void sc::InsertNode(HeapEntry *newNode) {
 
-	cout << "Inside Insert Node" << endl;
+	//cout << "Inside Insert Node" << endl;
 
 }
 
 /** IncreaseKey() : Increase the value of a node in the heap **/
-void hashtagcounter::IncreaseKey(HeapEntry *node, int newVal) {
+void sc::IncreaseKey(HeapEntry *node, int newVal) {
 
-	cout << "Inside Increase Key" << endl;
+	//cout << "Inside Increase Key" << endl;
 	
 }
 
+
+HeapEntry* sc::RemoveMax() {
+
+	//cout << "Inside Remove Max" << endl;
+
+
+}
+
+
+void sc::AddChildren2Root(HeapEntry *firstChild) {
+
+
+}
+
+
+void sc::RecursiveMerge(HeapEntry *pairNode1) {
+
+
+}
+
+
+HeapEntry* sc::CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2) {
+
+
+}
+
+
+HeapEntry* sc::InsertIntoRootList(HeapEntry *oldNode, HeapEntry *newNode) {
+
+
+}
+
+
+void sc::NodeCut(HeapEntry *childNode, HeapEntry *parentNode) {
+
+
+}
+ 
+
+void sc::NodeCascade(HeapEntry *parentNode) {
+
+
+}
