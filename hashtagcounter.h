@@ -26,9 +26,10 @@ class hashtagcounter {
   
     private:
 	/** Pointer to the maximum element in the heap. */
-	HeapEntry *hMax = NULL;
+	HeapEntry *hMax;
      
     public:
+	hashtagcounter();	// Constructor	
 	HeapEntry* HeapInit(int elem, string hHashTag);	
 	void InsertNode(HeapEntry *newNode);		
 	void IncreaseKey(HeapEntry *node, int newVal);	

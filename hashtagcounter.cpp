@@ -10,10 +10,17 @@
 
 using namespace std;
 
+
 /** To keep track of degree of nodes to combine in pairs **/
 unordered_map<int, HeapEntry*> degreeMap;
 
-// Set the initial left and right sibling of a new node to itself
+/** Constructor to set intial heap pointer (hMax) **/
+sc::hashtagcounter() {
+	
+	hMax = NULL;		
+}
+
+/** Set the initial left and right sibling of a new node to itself **/
 HeapEntry* sc::HeapInit(int elem, string hHashTag) {
   
   HeapEntry *node = new HeapEntry;
@@ -28,21 +35,26 @@ HeapEntry* sc::HeapInit(int elem, string hHashTag) {
 
 /** Insert() : Insert a new node into the heap **/ 
 void sc::InsertNode(HeapEntry *newNode) {
-	 
-	cout << "InsertNode()" << endl;
+	
+	cout << "InsertKey()" << endl; 
 	// For the very first node
 	if(hMax == NULL) { 
-	    
+	    cout << "I should be here only once" << endl;  
 	    hMax = newNode;
 	    hMax->hParent = NULL;
 	    hMax->hLeftSib = hMax;
 	    hMax->hRightSib = hMax;
 	    hMax->hChildCut = false;
-
+	
+	    if(hMax != NULL)
+		cout << "Just now assigned new node" << endl;
 	}
-	else
-		
+	else {
+	    cout << "In else of InsertNode" << endl;	
 	    hMax = InsertIntoRootList(hMax, newNode);		
+	}
+	if(hMax == NULL)
+		cout << "InsertNode: hMax is NULL" << endl;
 
 	return;
 }
@@ -50,31 +62,41 @@ void sc::InsertNode(HeapEntry *newNode) {
 /** IncreaseKey() : Increase the value of a node in the heap **/
 void sc::IncreaseKey(HeapEntry *node, int newVal) {
 
+	cout << "IncreaseKey()" << endl;
 	node->hElem = node->hElem + newVal;		// Change the value at the node to the new larger value	
 	HeapEntry *cacheParent = node->hParent;		// The Parent of the node is stored
-		
+  			
 	// Check to see if the child node's count value is greater than its parent
 	if(cacheParent != NULL && node->hElem > cacheParent->hElem) {
-	    cout << "if" << endl;	
+	    	
 	    // Cut() & CascadeCut() : Cut the node from its parent node and cascade into root node
 	    NodeCut(node, cacheParent);
 	    NodeCascade(cacheParent);
 
 	}
-	
-	if(node->hElem > hMax->hElem)
-	    hMax = node;				// New node with larger count value becomes hMax		
 
+	cout << "before if" << endl;
+	if(node == NULL)
+	   cout << "node is NULL" << endl;
+
+	if(hMax == NULL)
+	  cout << "hMax is NULL" << endl;
+	
+	if(hMax != NULL && node->hElem > hMax->hElem)
+		hMax = node;				// New node with larger count value becomes hMax		 
+	
+	cout << "after if" << endl;
 }
 
 
 /** RemoveMax() : Remove the max node from the heap **/
 HeapEntry* sc::RemoveMax() {
 
+	cout << "RemoveMax()" << endl;
 	HeapEntry *cacheMaxNode = hMax;			// Need to return this to calling function  
 
 	if(hMax->hRightSib == hMax) {			// For A single node at root
-
+		cout << "Remove Max: Setting hMax to NULL" << endl;
 		hMax = NULL;				// Set the max pointer to null & the heap becomes empty
 		AddChildren2Root(cacheMaxNode);		// Add the children (if any) of max node to root list
 	
