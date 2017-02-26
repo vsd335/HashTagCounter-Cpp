@@ -158,19 +158,13 @@ void sc::RecursiveMerge(HeapEntry *pairNode1) {
 		if(degreeMap.find(degree) != degreeMap.end()) { // Same degree node is present in hash map
 			
 			if(pairNode1 != degreeMap[degree]) {
-				
+
 				HeapEntry *pairNode2 = degreeMap[degree];
-				
- 				unordered_map<int, HeapEntry*>::iterator itr = degreeMap.begin();
-				// Remove same degree node entry from degree map
-				while (itr != degreeMap.end()) {
-				    if (ShouldDelete(*itr)) {
-				         itr = degreeMap.erase(itr);
-   				    } 
-				    else {
-      					 ++itr;
-    				    }
-				}
+
+				// Remove same degree node entry from degree map 
+				degreeMap.erase(degree);				
+					
+				// Returns the parent node (Node with larger count value)
 				HeapEntry *parentNode = CombineThePairs(pairNode1, pairNode2);
 				pairNode1 = parentNode;
 				RecursiveMerge(pairNode1);
@@ -188,9 +182,78 @@ void sc::RecursiveMerge(HeapEntry *pairNode1) {
 }
 
 
+/** This method combines two nodes such that, one of the nodes becomes child of another node **/
 HeapEntry* sc::CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2) {
 
+	HeapEntry *parentNode, *childNode;
+	
+	// This is to handle similar count hashTags, 
+	// need to make sure, the max node always stays at the root
+	if(pairNode1 == hMax || pairNode2 == hMax) {
 
+		if(pairNode1 == hMax) {
+			
+			pairNode2->hRightSib->hLeftSib = pairNode2->hLeftSib;
+			pairNode2->hLeftSib->hRightSib = pairNode2->hRightSib;
+
+			parentNode = pairNode1;
+			childNode = pairNode2;			
+		}
+		else if(pairNode2 == hMax) {
+
+                        pairNode1->hRightSib->hLeftSib = pairNode1->hLeftSib;
+                        pairNode1->hLeftSib->hRightSib = pairNode1->hRightSib;
+                        
+                        parentNode = pairNode2;
+                        childNode = pairNode1;
+                }
+	}
+	else if(pairNode1->hElem > pairNode2->hElem) {			// Need to remove pairNode2 from root
+
+		pairNode2->hRightSib->hLeftSib = pairNode2->hLeftSib;
+                pairNode2->hLeftSib->hRightSib = pairNode2->hRightSib;
+
+                parentNode = pairNode1;
+                childNode = pairNode2;
+		
+	}
+	else {								// Need to remove pairNode1 from root
+
+		pairNode1->hRightSib->hLeftSib = pairNode1->hLeftSib;
+                pairNode1->hLeftSib->hRightSib = pairNode1->hRightSib;
+
+                parentNode = pairNode2;
+                childNode = pairNode1;		
+
+	}
+	
+	if(parentNode->hDegree == 0) {					// If the parent has no previous children, Insert new child
+
+		parentNode->hChild = childNode;
+		childNode->hParent = parentNode;
+
+		childNode->hRightSib = childNode;
+                childNode->hLeftSib = childNode;
+			
+	}
+	else {
+		
+		childNode->hRightSib = childNode;
+                childNode->hLeftSib = childNode;
+		
+		HeapEntry *defaultChild = parentNode->hChild;		// Accessing the already present child node
+		HeapEntry *valNext = defaultChild->hRightSib;		// Store this since we are going to overwrite it.
+		defaultChild->hRightSib = childNode;
+		defaultChild->hRightSib->hLeftSib = defaultChild;
+		childNode->hRightSib = valNext;
+		childNode->hRightSib->hLeftSib = childNode;
+		parentNode->hChild = childNode;		// May be not necessary!!! remove and see if it is OKAY
+		childNode->hParent = parentNode;
+	}
+	
+	parentNode->hDegree++;				// Increase the degree of parent node as we just inserted a new child
+	
+	return parentNode;
 }
 
 
