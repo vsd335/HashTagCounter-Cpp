@@ -57,24 +57,38 @@ int main(int argc, char *argv[]) {
   outFile.open("output_file.txt");
   
   // This will read one hash tag at a time
-  string readHashTag, hashTag;
-  int hashTagCount;
-  char first;
   while(!inFile.eof()) {
-	
+
+    string readHashTag;
     getline(inFile, readHashTag);
-    first = readHashTag.at(0);       
-    
+    char first = readHashTag.at(0);       
+     
     // To Separate hash tags entries from queries
-    if(first == '#' ) {							// These are hash tags
+    if(first == '#' ) {						// These are hash tags
    
-	string *split  = strtok (readHashTag, " ");
+	int hashTagCount=0;
+	string hashTag;
+	hashTag = readHashTag.substr(1, readHashTag.find(" ")-1);
+	hashTagCount = atoi(readHashTag.substr(readHashTag.find(" ")+1, readHashTag.size()-readHashTag.find(" ")-1).c_str());
+	
 	// hash tag counter object creation   
 	hashtagcounter node(hashTagCount, hashTag);	
-     
+	
+	if (hm.find(hashTag) == hm.end) {
+		// hashTag is not present in HashMap so do Insert()
+		
+		
+	}
+	else {
+		// hashTag is present in HashMap so do IncreaseKey()		
+ 	        hashtagcounter node(hashTagCount, hashTag);
+		
+		
+	}     
+	
     }
     
-    else if (first == 's' || first == 'S') {						// Stop here
+    else if (first == 's' || first == 'S') {			// Stop here
    	
 	inFile.close();
 	outFile.close();   
@@ -84,8 +98,8 @@ int main(int argc, char *argv[]) {
     
    else {							// These are removeMax queries 
 	
-	   	
-
+	int query = stoi(readHashTag);	   	
+	
    
    }  
       

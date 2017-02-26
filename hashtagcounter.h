@@ -22,9 +22,9 @@ struct HeapEntry {
 };
 
 // Hash Map for all the elements to be inserted into the heap
-//unordered_map<string, HeapEntry*> hm;
+unordered_map<string, HeapEntry*> hm;
 
-/** Hash Map for all the elements to be inserted into the heap **/
+/** Hash Map to keep track of degree of nodes while pair-wise combining **/
 //unordered_map<int, HeapEntry*> degreeMap;
 
 class hashtagcounter {
