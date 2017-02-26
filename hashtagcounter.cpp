@@ -35,34 +35,42 @@ HeapEntry* sc::HeapInit(int elem, string hHashTag) {
 
 /** Insert() : Insert a new node into the heap **/ 
 void sc::InsertNode(HeapEntry *newNode) {
-	
-	cout << "InsertKey()" << endl; 
+	cout << "Entering InsertNode " <<endl;
+
 	// For the very first node
 	if(hMax == NULL) { 
-	    cout << "I should be here only once" << endl;  
+	 
 	    hMax = newNode;
 	    hMax->hParent = NULL;
 	    hMax->hLeftSib = hMax;
 	    hMax->hRightSib = hMax;
-	    hMax->hChildCut = false;
-	
-	    if(hMax != NULL)
-		cout << "Just now assigned new node" << endl;
+	    hMax->hChildCut = false;		
 	}
 	else {
-	    cout << "In else of InsertNode" << endl;	
+	   
 	    hMax = InsertIntoRootList(hMax, newNode);		
 	}
-	if(hMax == NULL)
-		cout << "InsertNode: hMax is NULL" << endl;
+
+	// Always ensure that, hMax is pointing to the appropriate max node in the heap
+	HeapEntry *maxNodeTemp = hMax->hLeftSib;
+    	HeapEntry *currNode = hMax;
+	do {
+		if(currNode->hRightSib->hElem > hMax->hElem) {
+					
+			hMax = currNode->hRightSib;
+			
+		}
+		currNode= currNode->hRightSib;
+	}while(currNode != maxNodeTemp);	
+	cout << "Exiting InsertNode " <<endl;
 
 	return;
 }
 
 /** IncreaseKey() : Increase the value of a node in the heap **/
 void sc::IncreaseKey(HeapEntry *node, int newVal) {
+	cout << "Entering IncreaseKey " <<endl;
 
-	cout << "IncreaseKey()" << endl;
 	node->hElem = node->hElem + newVal;		// Change the value at the node to the new larger value	
 	HeapEntry *cacheParent = node->hParent;		// The Parent of the node is stored
   			
@@ -74,29 +82,21 @@ void sc::IncreaseKey(HeapEntry *node, int newVal) {
 	    NodeCascade(cacheParent);
 
 	}
-
-	cout << "before if" << endl;
-	if(node == NULL)
-	   cout << "node is NULL" << endl;
-
-	if(hMax == NULL)
-	  cout << "hMax is NULL" << endl;
 	
-	if(hMax != NULL && node->hElem > hMax->hElem)
+	if(node->hElem > hMax->hElem)
 		hMax = node;				// New node with larger count value becomes hMax		 
-	
-	cout << "after if" << endl;
+	cout << "Exiting IncreaseKey " <<endl;
+
 }
 
 
 /** RemoveMax() : Remove the max node from the heap **/
 HeapEntry* sc::RemoveMax() {
-
-	cout << "RemoveMax()" << endl;
+	cout << "Entering RemoveMax " <<endl;
 	HeapEntry *cacheMaxNode = hMax;			// Need to return this to calling function  
 
 	if(hMax->hRightSib == hMax) {			// For A single node at root
-		cout << "Remove Max: Setting hMax to NULL" << endl;
+	
 		hMax = NULL;				// Set the max pointer to null & the heap becomes empty
 		AddChildren2Root(cacheMaxNode);		// Add the children (if any) of max node to root list
 	
@@ -119,8 +119,10 @@ HeapEntry* sc::RemoveMax() {
 		// This loop is to find out the new max node
 		do {
 
-			if(currPointer->hRightSib->hElem > hMax->hElem)
+			if(currPointer->hRightSib->hElem > hMax->hElem) {
+				
 				hMax = currPointer->hRightSib;
+			}
 			
 			currPointer = currPointer->hRightSib;
 		}
@@ -128,15 +130,17 @@ HeapEntry* sc::RemoveMax() {
 	
 	}
 
-	/** Pairwise combine starts here **/       	
+	/** Pairwise combine starts here **/    	
 	/** This function will combine nodes with same degree until no two nodes in the root have same degree **/
 	RecursiveMerge(hMax);
 	
+	degreeMap.clear();	
 	cacheMaxNode->hLeftSib = cacheMaxNode;
 	cacheMaxNode->hRightSib = cacheMaxNode;
 	cacheMaxNode->hParent = NULL;
 	cacheMaxNode->hChild = NULL;
 	cacheMaxNode->hDegree = 0;
+	cout << "Exiting RemoveMax " <<endl;
 
 	// Return the max node to main function to write to the output file
 	return cacheMaxNode;
@@ -145,20 +149,22 @@ HeapEntry* sc::RemoveMax() {
 
 /** This method adds the children of a removed node to root node list of the heap **/
 void sc::AddChildren2Root(HeapEntry *removedChild) {
-
+	cout << "Entering AddChildren2Root " <<endl;
 	HeapEntry *tempNode = removedChild->hChild;
 	
-	if(removedChild->hDegree == 0) 		// Max node has no children
+	if(removedChild->hDegree == 0) 		// Max node has no children		
 		return;	
 		
-	else if(removedChild->hDegree == 1)	// Max node has only one child
+	else if(removedChild->hDegree == 1) 	// Max node has only one child		
 		InsertNode(tempNode);		// Insert the only child to root of heap
 
 	else {					// Max node has more than one child
+		cout << "Inside else with degree: " << removedChild->hDegree << endl;
 		for(int i=0; i<removedChild->hDegree; i++) {
-
-			HeapEntry *currChild = tempNode;
-			tempNode = tempNode->hRightSib;
+			cout << "Inside for" << endl;
+			HeapEntry *currChild = removedChild->hChild;
+			cout << "after first statement" << endl;			
+			removedChild->hChild = currChild->hRightSib;
 			currChild->hRightSib = currChild;
 			currChild->hLeftSib = currChild;
 			InsertNode(currChild);					
@@ -167,6 +173,7 @@ void sc::AddChildren2Root(HeapEntry *removedChild) {
 	}
 
 	removedChild->hChild = NULL;
+	cout << "Exiting AddChildren2Root " <<endl;
 	return;
 }
 
@@ -174,6 +181,7 @@ void sc::AddChildren2Root(HeapEntry *removedChild) {
 /** This method recursively combines nodes until no two nodes have same degree **/
 void sc::RecursiveMerge(HeapEntry *pairNode1) {
 
+	cout << "Entered Recursive Merge " <<endl;
 	do {
 		int degree = pairNode1->hDegree;		// Degree of the node
 		
@@ -197,15 +205,18 @@ void sc::RecursiveMerge(HeapEntry *pairNode1) {
 		} 
 		else
 			degreeMap[degree] = pairNode1;		// Update degree table with this degree and node	
+
+		pairNode1 = pairNode1->hRightSib;
 	}
 	while(pairNode1 != hMax);
-	
+	cout << "Exiting Recursive Merge " <<endl;
 	return;
 }
 
 
 /** This method combines two nodes such that, one of the nodes becomes child of another node **/
 HeapEntry* sc::CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2) {
+	cout << "Entering Combine the Pairs " <<endl;
 
 	HeapEntry *parentNode, *childNode;
 	
@@ -215,37 +226,38 @@ HeapEntry* sc::CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2) {
 
 		if(pairNode1 == hMax) {
 			
-			pairNode2->hRightSib->hLeftSib = pairNode2->hLeftSib;
 			pairNode2->hLeftSib->hRightSib = pairNode2->hRightSib;
+			pairNode2->hRightSib->hLeftSib = pairNode2->hLeftSib;								
 
 			parentNode = pairNode1;
 			childNode = pairNode2;			
 		}
-		else if(pairNode2 == hMax) {
+		else {
 
-                        pairNode1->hRightSib->hLeftSib = pairNode1->hLeftSib;
-                        pairNode1->hLeftSib->hRightSib = pairNode1->hRightSib;
-                        
+						pairNode1->hLeftSib->hRightSib = pairNode1->hRightSib;
+                        pairNode1->hRightSib->hLeftSib = pairNode1->hLeftSib;                                               
+
                         parentNode = pairNode2;
                         childNode = pairNode1;
-                }
+        }
 	}
 	else if(pairNode1->hElem > pairNode2->hElem) {			// Need to remove pairNode2 from root
-
-		pairNode2->hRightSib->hLeftSib = pairNode2->hLeftSib;
-                pairNode2->hLeftSib->hRightSib = pairNode2->hRightSib;
-
-                parentNode = pairNode1;
-                childNode = pairNode2;
+		
+        pairNode2->hLeftSib->hRightSib = pairNode2->hRightSib;
+        pairNode2->hRightSib->hLeftSib = pairNode2->hLeftSib;
+		
+		parentNode = pairNode1;
+        childNode = pairNode2;
 		
 	}
 	else {								// Need to remove pairNode1 from root
 
+		
+        pairNode1->hLeftSib->hRightSib = pairNode1->hRightSib;
 		pairNode1->hRightSib->hLeftSib = pairNode1->hLeftSib;
-                pairNode1->hLeftSib->hRightSib = pairNode1->hRightSib;
-
-                parentNode = pairNode2;
-                childNode = pairNode1;		
+        
+        parentNode = pairNode2;
+        childNode = pairNode1;		
 
 	}
 	
@@ -269,19 +281,21 @@ HeapEntry* sc::CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2) {
 		defaultChild->hRightSib->hLeftSib = defaultChild;
 		childNode->hRightSib = valNext;
 		childNode->hRightSib->hLeftSib = childNode;
-		parentNode->hChild = childNode;		// May be not necessary!!! remove and see if it is OKAY
+		//parentNode->hChild = childNode;		// May be not necessary!!! remove and see if it is OKAY
 		childNode->hParent = parentNode;
 	}
 	
 	parentNode->hDegree++;				// Increase the degree of parent node as we just inserted a new child
-	
+	cout << "Exiting Comnine the pairs " <<endl;
+
 	return parentNode;
 }
 
 
 /** Merge new node with the List of nodes already present in the heap **/
 HeapEntry* sc::InsertIntoRootList(HeapEntry *oldNode, HeapEntry *newNode) {
-	
+	cout << "Entering InsertIntoRootList " <<endl;
+
 	if(oldNode == NULL && newNode == NULL) {		// Both nodes are null & the resulting node is null.
 		return NULL;
 	}
@@ -312,12 +326,13 @@ HeapEntry* sc::InsertIntoRootList(HeapEntry *oldNode, HeapEntry *newNode) {
 		/* Return a pointer to the Larger node */
 		return oldNode->hElem >/*=*/ newNode->hElem? oldNode : newNode;
 	}
+	cout << "Exiting InsertIntoRootList " <<endl;
 }
 
 
 /** Separates the Child node from its parent node, as the key of Child is larger than its Parent **/
 void sc::NodeCut(HeapEntry *childNode, HeapEntry *parentNode) {
-	
+	cout << "Entering NodeCut " <<endl;
 	// Set the parent of the node to removed to null
 	childNode->hParent = NULL;
 
@@ -345,7 +360,7 @@ void sc::NodeCut(HeapEntry *childNode, HeapEntry *parentNode) {
 	childNode->hChildCut = false;		// ChildCut is set to false 
 	parentNode->hDegree-- ;			// Decrease the degree of the parent node
 	InsertNode(childNode);			// Remove the node and insert into the root list	
-	
+	cout << "Exiting NodeCut " <<endl;
 	return;
 	
 }
@@ -353,7 +368,7 @@ void sc::NodeCut(HeapEntry *childNode, HeapEntry *parentNode) {
 
 /** Inserts the Separated Child into the root node List **/
 void sc::NodeCascade(HeapEntry *parentNode) {
-	
+	cout << "Entering NodeCascade " <<endl;
 	HeapEntry *grandParentNode = parentNode->hParent;	// Store the parent of parentNode
 	
 	if(grandParentNode != NULL) {
@@ -372,6 +387,6 @@ void sc::NodeCascade(HeapEntry *parentNode) {
 		}
 			
 	}
-	
+	cout << "Exiting NodeCascade " <<endl;
 	return;
 }

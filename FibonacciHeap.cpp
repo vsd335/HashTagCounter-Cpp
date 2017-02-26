@@ -58,14 +58,15 @@ int main(int argc, char *argv[]) {
   //The Output File containing top most n hash tags
   ofstream outFile;
   outFile.open("output_file.txt");
-  
+	
+  hashtagcounter heap;  // Initialize hashtagcounter class 
+ 
   // This will read one hash tag at a time
   while(!inFile.eof()) {
 
     string readHashTag;
     getline(inFile, readHashTag);
     char first = readHashTag.at(0);       
-    hashtagcounter heap;  // Initialize hashtagcounter class     
 
     // To Separate hash tags entries from queries
     if(first == '#' ) {						// These are hash tags
@@ -115,7 +116,7 @@ int main(int argc, char *argv[]) {
 	    // Write to output file
 	    outFile << key[i];
 	    if(i < query-1)
-	        cout << ",";
+	        outFile << ",";
 		
 	}
 	
