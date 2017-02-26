@@ -21,9 +21,6 @@ struct HeapEntry {
   
 };
 
-// Hash Map for all the elements to be inserted into the heap
-unordered_map<string, HeapEntry*> hm;
-
 /** Hash Map to keep track of degree of nodes while pair-wise combining **/
 //unordered_map<int, HeapEntry*> degreeMap;
 
@@ -34,10 +31,10 @@ class hashtagcounter {
 	HeapEntry *hMax = NULL;
      
     public:
-	hashtagcounter(int elem, string hHashTag);		/** Constructor **/
-	/**void InsertNode(HeapEntry *newNode);		
+	HeapEntry* HeapInit(int elem, string hHashTag);	
+	void InsertNode(HeapEntry *newNode);		
 	void IncreaseKey(HeapEntry *node, int newVal);	
-	HeapEntry *RemoveMax();				
+	/**HeapEntry *RemoveMax();				
 	void AddChildren2Root(HeapEntry *firstChild); 	
 	void RecursiveMerge(HeapEntry *pairNode1);	
 	HeapEntry *CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2);	

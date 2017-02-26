@@ -10,11 +10,29 @@ using namespace std;
 //using namespace hashtagcounter;
 
 // Set the initial left and right sibling of a new node to itself
-hashtagcounter::hashtagcounter (int elem, string hHashTag) {
+HeapEntry* hashtagcounter::HeapInit(int elem, string hHashTag) {
   
-  //  *hRightSib = *hLeftSib = this;
-  //  this.hHashTag = hHashTag;
-  //  hELem = elem;
-  //cout << hHashTag << " "  << elem << endl;  
+  HeapEntry *node = new HeapEntry;
+  node->hRightSib = node;
+  node->hLeftSib = node; 
+  node->hHashTag = hHashTag;
+  node->hElem = elem;
+ 
+  return node;  
 
 }
+
+/** Insert() : Insert a new node into the heap **/ 
+void hashtagcounter::InsertNode(HeapEntry *newNode) {
+
+	cout << "Inside Insert Node" << endl;
+
+}
+
+/** IncreaseKey() : Increase the value of a node in the heap **/
+void hashtagcounter::IncreaseKey(HeapEntry *node, int newVal) {
+
+	cout << "Inside Increase Key" << endl;
+	
+}
+

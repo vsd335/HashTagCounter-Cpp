@@ -31,6 +31,9 @@
 
 using namespace std;
 
+// Hash Map for all the elements to be inserted into the heap
+unordered_map<string, HeapEntry*> hm;
+
 int main(int argc, char *argv[]) {
   
   if(argc < 2) {
@@ -71,18 +74,18 @@ int main(int argc, char *argv[]) {
 	hashTag = readHashTag.substr(1, readHashTag.find(" ")-1);
 	hashTagCount = atoi(readHashTag.substr(readHashTag.find(" ")+1, readHashTag.size()-readHashTag.find(" ")-1).c_str());
 	
-	// hash tag counter object creation   
-	hashtagcounter node(hashTagCount, hashTag);	
-	
-	if (hm.find(hashTag) == hm.end) {
-		// hashTag is not present in HashMap so do Insert()
-		
-		
+	hashtagcounter heap;  // Initialize hashtagcounter class		   
+
+	if (hm.find(hashTag) == hm.end()) {
+		// hashTag is not present in HashMap so do InsertKey()
+		hm[hashTag] = heap.HeapInit(hashTagCount, hashTag);
+		heap.InsertNode(hm[hashTag]);
+				
 	}
 	else {
 		// hashTag is present in HashMap so do IncreaseKey()		
- 	        hashtagcounter node(hashTagCount, hashTag);
-		
+ 	        heap.IncreaseKey(hm[hashTag],hashTagCount);
+				
 		
 	}     
 	
