@@ -41,7 +41,7 @@ void sc::IncreaseKey(HeapEntry *node, int newVal) {
 
 HeapEntry* sc::RemoveMax() {
 
-	//cout << "Inside Remove Max" << endl;
+	cout << "Inside Remove Max" << endl;
 
 
 }

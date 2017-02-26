@@ -65,17 +65,15 @@ int main(int argc, char *argv[]) {
     string readHashTag;
     getline(inFile, readHashTag);
     char first = readHashTag.at(0);       
-     
+    hashtagcounter heap;  // Initialize hashtagcounter class     
+
     // To Separate hash tags entries from queries
     if(first == '#' ) {						// These are hash tags
    
 	int hashTagCount=0;
 	string hashTag;
 	hashTag = readHashTag.substr(1, readHashTag.find(" ")-1);
-	hashTagCount = atoi(readHashTag.substr(readHashTag.find(" ")+1, readHashTag.size()-readHashTag.find(" ")-1).c_str());
-	
-	hashtagcounter heap;  // Initialize hashtagcounter class		   
-
+	hashTagCount = atoi(readHashTag.substr(readHashTag.find(" ")+1, readHashTag.size()-readHashTag.find(" ")-1).c_str());		   
 	if (hm.find(hashTag) == hm.end()) {
 		// hashTag is not present in HashMap so do InsertKey()
 		HeapEntry *node;
@@ -103,21 +101,30 @@ int main(int argc, char *argv[]) {
     
    else {							// These are removeMax queries 
 
-	int query = stoi(readHashTag);	   	
-
-	// Hash Table(map) for all the removed elements to be inserted back into the heap
-	unordered_map<string, int> dict;
+	int query = stoi(readHashTag);	   
 		
-	HeapEntry *node;
-
+	HeapEntry *node[query];
+	string key[query];
+	int value[query];
 	// Remove Max and Pairwise Combine operations
 	for (int i=0; i<query; i++) {
 
-		//node = heap.RemoveMax();
-		
+	    node[i] = heap.RemoveMax();
+	    key[i] = node[i]->hHashTag;		
+            value[i] = node[i]->hElem;
 
+	    // Write to output file
+	    outFile << key[i];
+	    if(i < query-1)
+	        cout << ",";
+		
 	}
-  
+	
+	// Insert the above removed nodes back into the root of Fibonacci heap
+	for(int j=0; j<query; j++) {
+	    node[j] = heap.HeapInit(value[j], key[j]);
+	    hm[key[j]] = node[j]; 
+  	}
    }  
       
   } 
