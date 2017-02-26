@@ -10,6 +10,9 @@
 
 using namespace std;
 
+/** To keep track of degree of nodes to combine in pairs **/
+unordered_map<int, HeapEntry*> degreeMap;
+
 // Set the initial left and right sibling of a new node to itself
 HeapEntry* sc::HeapInit(int elem, string hHashTag) {
   
@@ -103,10 +106,7 @@ HeapEntry* sc::RemoveMax() {
 	
 	}
 
-	/** Pairwise combine starts here **/       
-    	/** Need to keep track of degree of nodes to combine in pairs**/
-	unordered_map<int, HeapEntry*> degreeMap;
-	
+	/** Pairwise combine starts here **/       	
 	/** This function will combine nodes with same degree until no two nodes in the root have same degree **/
 	RecursiveMerge(hMax);
 	
@@ -125,17 +125,66 @@ HeapEntry* sc::RemoveMax() {
 void sc::AddChildren2Root(HeapEntry *removedChild) {
 
 	HeapEntry *tempNode = removedChild->hChild;
-	HeapEntry *siblings;
 	
+	if(removedChild->hDegree == 0) 		// Max node has no children
+		return;	
 		
+	else if(removedChild->hDegree == 1)	// Max node has only one child
+		InsertNode(tempNode);		// Insert the only child to root of heap
 
+	else {					// Max node has more than one child
+		for(int i=0; i<removedChild->hDegree; i++) {
 
+			HeapEntry *currChild = tempNode;
+			tempNode = tempNode->hRightSib;
+			currChild->hRightSib = currChild;
+			currChild->hLeftSib = currChild;
+			InsertNode(currChild);					
+
+		}			
+	}
+
+	removedChild->hChild = NULL;
+	return;
 }
 
 
+/** This method recursively combines nodes until no two nodes have same degree **/
 void sc::RecursiveMerge(HeapEntry *pairNode1) {
 
-
+	do {
+		int degree = pairNode1->hDegree;		// Degree of the node
+		
+		if(degreeMap.find(degree) != degreeMap.end()) { // Same degree node is present in hash map
+			
+			if(pairNode1 != degreeMap[degree]) {
+				
+				HeapEntry *pairNode2 = degreeMap[degree];
+				
+ 				unordered_map<int, HeapEntry*>::iterator itr = degreeMap.begin();
+				// Remove same degree node entry from degree map
+				while (itr != degreeMap.end()) {
+				    if (ShouldDelete(*itr)) {
+				         itr = degreeMap.erase(itr);
+   				    } 
+				    else {
+      					 ++itr;
+    				    }
+				}
+				HeapEntry *parentNode = CombineThePairs(pairNode1, pairNode2);
+				pairNode1 = parentNode;
+				RecursiveMerge(pairNode1);
+				return;
+				
+			}
+						
+		} 
+		else
+			degreeMap[degree] = pairNode1;		// Update degree table with this degree and node	
+	}
+	while(pairNode1 != hMax);
+	
+	return;
 }
 
 
