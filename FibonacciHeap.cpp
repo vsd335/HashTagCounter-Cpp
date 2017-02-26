@@ -124,7 +124,10 @@ int main(int argc, char *argv[]) {
 	for(int j=0; j<query; j++) {
 	    node[j] = heap.HeapInit(value[j], key[j]);
 	    hm[key[j]] = node[j]; 
+	    heap.InsertNode(node[j]);
   	}
+	
+	outFile << endl;
    }  
       
   } 
