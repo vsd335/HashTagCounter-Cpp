@@ -21,8 +21,6 @@ struct HeapEntry {
   
 };
 
-/** Hash Map to keep track of degree of nodes while pair-wise combining **/
-//unordered_map<int, HeapEntry*> degreeMap;
 
 class hashtagcounter {
   
@@ -35,7 +33,7 @@ class hashtagcounter {
 	void InsertNode(HeapEntry *newNode);		
 	void IncreaseKey(HeapEntry *node, int newVal);	
 	HeapEntry *RemoveMax();				
-	void AddChildren2Root(HeapEntry *firstChild); 	
+	void AddChildren2Root(HeapEntry *removedChild); 	
 	void RecursiveMerge(HeapEntry *pairNode1);	
 	HeapEntry *CombineThePairs(HeapEntry *pairNode1, HeapEntry *pairNode2);	
         HeapEntry *InsertIntoRootList(HeapEntry *oldNode, HeapEntry *newNode);

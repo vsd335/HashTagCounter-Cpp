@@ -65,15 +65,69 @@ void sc::IncreaseKey(HeapEntry *node, int newVal) {
 }
 
 
+/** RemoveMax() : Remove the max node from the heap **/
 HeapEntry* sc::RemoveMax() {
 
-	cout << "Inside Remove Max" << endl;
+	HeapEntry *cacheMaxNode = hMax;			// Need to return this to calling function  
 
+	if(hMax->hRightSib == hMax) {			// For A single node at root
 
+		hMax = NULL;				// Set the max pointer to null & the heap becomes empty
+		AddChildren2Root(cacheMaxNode);		// Add the children (if any) of max node to root list
+	
+	}
+	else {						// For more than one node at root
+
+		// Max Nodes Siblings must be joined
+		hMax->hRightSib->hLeftSib = hMax->hLeftSib;
+		hMax->hLeftSib->hRightSib = hMax->hRightSib;	
+
+		HeapEntry *rightChild = cacheMaxNode->hRightSib;
+		
+		hMax = NULL;				// Set the max pointer to null, may be not required (CHECK later)
+		hMax = rightChild;			
+		
+		AddChildren2Root(cacheMaxNode);		// Insert the children of Max node into the root of the heap
+
+		HeapEntry *currPointer = hMax;
+
+		// This loop is to find out the new max node
+		do {
+
+			if(currPointer->hRightSib->hElem > hMax->hElem)
+				hMax = currPointer->hRightSib;
+			
+			currPointer = currPointer->hRightSib;
+		}
+		while(currPointer != rightChild);
+	
+	}
+
+	/** Pairwise combine starts here **/       
+    	/** Need to keep track of degree of nodes to combine in pairs**/
+	unordered_map<int, HeapEntry*> degreeMap;
+	
+	/** This function will combine nodes with same degree until no two nodes in the root have same degree **/
+	RecursiveMerge(hMax);
+	
+	cacheMaxNode->hLeftSib = cacheMaxNode;
+	cacheMaxNode->hRightSib = cacheMaxNode;
+	cacheMaxNode->hParent = NULL;
+	cacheMaxNode->hChild = NULL;
+	cacheMaxNode->hDegree = 0;
+
+	// Return the max node to main function to write to the output file
+	return cacheMaxNode;
 }
 
 
-void sc::AddChildren2Root(HeapEntry *firstChild) {
+/** This method adds the children of a removed node to root node list of the heap **/
+void sc::AddChildren2Root(HeapEntry *removedChild) {
+
+	HeapEntry *tempNode = removedChild->hChild;
+	HeapEntry *siblings;
+	
+		
 
 
 }
@@ -149,12 +203,12 @@ void sc::NodeCut(HeapEntry *childNode, HeapEntry *parentNode) {
 	}
 	else { 
 
-		parentNode.hChild = NULL;
+		parentNode->hChild = NULL;
 	}
 
 
 	childNode->hRightSib = childNode->hLeftSib = childNode;
-	childNode.hChildCut = false;		// ChildCut is set to false 
+	childNode->hChildCut = false;		// ChildCut is set to false 
 	parentNode->hDegree-- ;			// Decrease the degree of the parent node
 	InsertNode(childNode);			// Remove the node and insert into the root list	
 	
