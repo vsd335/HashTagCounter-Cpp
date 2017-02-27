@@ -10,7 +10,7 @@ using namespace std;
 
 struct HeapEntry {
   
-  int hDegree;			// Number of children in the node
+  int hDegree=0;			// Number of children in the node
   string hHashTag;		// Holds the hash tag
   HeapEntry *hLeftSib;		// Left Sibling element 
   HeapEntry *hRightSib;		// Right Sibling element
